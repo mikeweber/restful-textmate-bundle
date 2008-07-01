@@ -1,0 +1,30 @@
+*RESTful Textmate Bundle*
+  For now, this isn't really a bundle, but I thought it was better to get something published first, then figure out how to install it later. The purpose of this bundle is to give Rails developers a quick way to create a basic 7 action RESTful controller with built-in context based ID searching when appropriate.
+
+*Files*
+  _rest_
+    This file contains the Snippet for generating a basic RESTful controller where only the model corresponding to the specified controller will be interacted with.  Most of the time, this is the Snippet you will use for a new controller.
+  _nrest_
+    This file contains the Snippet for generating a RESTful controller that belongs in a nested route.  The route for this kind of controller would look like this:
+      map.resources :parents, :has_many => [:things]
+  
+  Both of these files create a before filter called _find_ that will find the object this controller acts as an interface for whenever the :id param is present.  The _nrest_ Snippet goes a step further and forces all actions in the controller to be scoped by a :parent_id.  So when an :id param is present, it will only search within the scope of the @parent instance variable.
+
+*Installation*
+  1) To "install" these commands, copy the contents of one of the files (_rest_ or _nrest_), then open Textmate and choose Bundles->Bundle Editor->Edit Snippets... (⌃ ⌥ ⌘S).
+  2) Find _Ruby on Rails_ in the list on the left, then click the + symbol to add a _New Snippet_.
+  3) Title the Snippet to your choosing.  I recommend "Generate RESTful methods" (or if you're doing this for nrest, "Generate Nested RESTful methods").
+  4) On the right side of the screen, clear out the text box (Syntax Summary...) and paste in the code you copied in step 1.
+  5) Below the text box, you should see input for _Activation_ and _Scope Selector_.  Keep the Activation dropdown on Tab Trigger, and in the text field, enter the name of the file you just copied from (_rest_ or _nrest_).
+  6) Enter "source.ruby.rails" in the _Scope Selector_.  
+  7) Close the window, and open a controller you want to generate methods for in your Rails project.  Type "rest" or "nrest" then hit tab, and follow the prompts.
+
+*Terms*
+  @things: This is the plural name of the object name you're interacting with.  When used in the context of the Nested Controller, it should be the name of the :has_many or :has_and_belongs_to_many relationship between your parent object and the thing.  i.e.
+    class Parent < ActiveRecord::Base
+      has_many :things
+    end
+  @parent: This is the parent scope of your controller.  All @things in your nested controller will be found within the scope of the @parent.  (N/A to _rest_ Snippet).
+  @thing: The singular version of @things.
+  ProperName: The singular version of @things in human readable form.  This is used for all flash[:notices] that may appear.
+  Parent: The actual model name of the parent model.  (N/A to _rest_ Snippet)
