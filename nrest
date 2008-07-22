@@ -17,7 +17,7 @@ def show
 end
 
 def new
-  @$3 = $2.$1.new
+  @$3 = @$2.$1.new
 
   respond_to do |format|
     format.html # new.html.erb
@@ -26,14 +26,18 @@ def new
 end
 
 def edit
+  respond_to do |format|
+    format.html # edit.html.erb
+    format.xml  { render :xml => @${3:thing} }
+  end
 end
 
 def create
-  @$3 = $2.$1.new(params[:$3])
+  @$3 = @$2.$1.new(params[:$3])
 
   respond_to do |format|
     if @$3.save
-      flash[:notice] = '${4:ProperName} was successfully created.'
+      flash[:notice] = '${4:Proper Name} was successfully created.'
       format.html { redirect_to($2_$3_path(@$2, @$3)) }
       format.xml  { render :xml => @$3, :status => :created, :location => @$3 }
     else
@@ -60,7 +64,7 @@ def destroy
   @$3.destroy
 
   respond_to do |format|
-    format.html { redirect_to($1_path) }
+    format.html { redirect_to($2_$1_path) }
     format.xml  { head :ok }
   end
 end
@@ -76,11 +80,12 @@ def find
           @$3 = @$2.$1.find(params[:id])
         rescue
           flash[:notice] = "You've specified an invalid $4 to view"
-          redirect_to $2_$1_path
+          redirect_to $2_$1_path(@$2)
         end
       end
     rescue
-      redirect_to 
+      flash[:notice] = "You've specified an invalid ${6:Proper Parent Name} to view"
+      redirect_to ${7:parents}_path
     end
   end
 end
