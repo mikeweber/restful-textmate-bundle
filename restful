@@ -1,7 +1,7 @@
 before_filter :find
 
 def index
-  @${1:things} = @${2:parent}.$1.find :all
+  @${1:things} = ${2:Thing}.find :all
 
   respond_to do |format|
     format.html # index.html.erb
@@ -17,7 +17,7 @@ def show
 end
 
 def new
-  @$3 = @$2.$1.new
+  @$3 = $2.new
 
   respond_to do |format|
     format.html # new.html.erb
@@ -26,19 +26,15 @@ def new
 end
 
 def edit
-  respond_to do |format|
-    format.html # edit.html.erb
-    format.xml  { render :xml => @${3:thing} }
-  end
 end
 
 def create
-  @$3 = @$2.$1.new(params[:$3])
+  @$3 = $2.new(params[:$3])
 
   respond_to do |format|
     if @$3.save
-      flash[:notice] = '${4:Proper Name} was successfully created.'
-      format.html { redirect_to($2_$3_path(@$2, @$3)) }
+      flash[:notice] = '${4:ProperName} was successfully created.'
+      format.html { redirect_to($3_path(@$3)) }
       format.xml  { render :xml => @$3, :status => :created, :location => @$3 }
     else
       format.html { render :action => "new" }
@@ -51,7 +47,7 @@ def update
   respond_to do |format|
     if @$3.update_attributes(params[:$3])
       flash[:notice] = '$4 was successfully updated.'
-      format.html { redirect_to($2_$3_path(@$2, @$3)) }
+      format.html { redirect_to($3_path(@$3)) }
       format.xml  { head :ok }
     else
       format.html { render :action => "edit" }
@@ -64,7 +60,7 @@ def destroy
   @$3.destroy
 
   respond_to do |format|
-    format.html { redirect_to($2_$1_path) }
+    format.html { redirect_to($1_path) }
     format.xml  { head :ok }
   end
 end
@@ -72,20 +68,14 @@ end
 private
 
 def find
-  if params[:$2_id]
-    begin
-      @$2 = ${5:Parent}.find(params[:$2_id])
-      if params[:id]
-        begin
-          @$3 = @$2.$1.find(params[:id])
-        rescue
+  if params[:id]
+    unless @$3 = $2.find_by_id(params[:id])
+      respond_to do |format|
+        format.html do
           flash[:notice] = "You've specified an invalid $4 to view"
-          redirect_to $2_$1_path(@$2)
+          redirect_to($1_path) and return
         end
       end
-    rescue
-      flash[:notice] = "You've specified an invalid ${6:Proper Parent Name} to view"
-      redirect_to ${7:parents}_path
     end
   end
 end
