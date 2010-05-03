@@ -4,15 +4,15 @@ def index
   @${1:things} = ${2:Thing}.find :all
 
   respond_to do |format|
-    format.html # index.html.erb
-    format.xml  { render :xml => @$1 }
+    format.html
+    format.json { render :json => @$1 }
   end
 end
 
 def show
   respond_to do |format|
-    format.html # show.html.erb
-    format.xml  { render :xml => @${3:thing} }
+    format.html
+    format.json { render :json => @${3:thing} }
   end
 end
 
@@ -20,12 +20,16 @@ def new
   @$3 = $2.new
 
   respond_to do |format|
-    format.html # new.html.erb
-    format.xml  { render :xml => @$3 }
+    format.html
+    format.json { render :json => @$3 }
   end
 end
 
 def edit
+  respond_to do |format|
+    format.html
+    format.json { render :json => @${3:thing} }
+  end
 end
 
 def create
@@ -35,23 +39,25 @@ def create
     if @$3.save
       flash[:notice] = '${4:ProperName} was successfully created.'
       format.html { redirect_to($3_path(@$3)) }
-      format.xml  { render :xml => @$3, :status => :created, :location => @$3 }
+      format.json { render :json => @$3, :status => :created, :location => @$3 }
     else
       format.html { render :action => "new" }
-      format.xml  { render :xml => @$3.errors, :status => :unprocessable_entity }
+      format.json { render :json => @$3, :status => :unprocessable_entity }
     end
   end
 end
 
 def update
+  @$3.attributes = params[:$3]
+  
   respond_to do |format|
-    if @$3.update_attributes(params[:$3])
+    if @$3.save
       flash[:notice] = '$4 was successfully updated.'
       format.html { redirect_to($3_path(@$3)) }
-      format.xml  { head :ok }
+      format.json { head :ok }
     else
       format.html { render :action => "edit" }
-      format.xml  { render :xml => @$3.errors, :status => :unprocessable_entity }
+      format.json { render :json => @$3, :status => :unprocessable_entity }
     end
   end
 end
@@ -61,7 +67,7 @@ def destroy
 
   respond_to do |format|
     format.html { redirect_to($1_path) }
-    format.xml  { head :ok }
+    format.json { head :ok }
   end
 end
 
@@ -75,6 +81,7 @@ def find
           flash[:notice] = "You've specified an invalid $4 to view"
           redirect_to($1_path) and return
         end
+        format.json { head :not_found }
       end
     end
   end
